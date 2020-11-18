@@ -35,8 +35,35 @@ class App extends Component {
       box: {},
       route: "signin",
       isSignedIn: false,
+      user: {
+        id: "",
+        firstname: "",
+        lastname: "",
+        email: "",
+        entries: 0,
+        joined: "",
+      },
     };
   }
+
+  loadUser = (user) => {
+    this.setState({
+      user: {
+        id: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        entries: user.joined,
+        joined: user.joined,
+      },
+    });
+  };
+
+  // componentDidMount() {
+  //   fetch("http://localhost:15432")
+  //     .then((res) => res.json())
+  //     .then(console.log);
+  // }
 
   findFaceLocation = (data) => {
     const boundingBox =
@@ -64,8 +91,24 @@ class App extends Component {
     this.setState({ imageURL: this.state.input });
     app.models
       .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-      .then((resp) => this.displayFaceBox(this.findFaceLocation(resp)))
-      .catch((err) => console.log("Whoops!! This happened...", err));
+      .then((response) => {
+        console.log("hi", response);
+        if (response) {
+          fetch("http://localhost:3000/image", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              id: this.state.user.id,
+            }),
+          })
+            .then((response) => response.json())
+            .then((count) => {
+              this.setState(Object.assign(this.state.user, { entries: count }));
+            });
+        }
+        this.displayFaceBox(this.calculateFaceLocation(response));
+      })
+      .catch((err) => console.log(err));
   };
 
   onRouteChange = (route) => {
@@ -100,7 +143,10 @@ class App extends Component {
         ) : route === "signin" ? (
           <SignIn onRouteChange={this.onRouteChange} />
         ) : (
-          <Register onRouteChange={this.onRouteChange} />
+          <Register
+            loadUser={this.loadUser}
+            onRouteChange={this.onRouteChange}
+          />
         )}
       </div>
     );
