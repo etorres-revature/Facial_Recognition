@@ -1,8 +1,14 @@
 import React from "react";
-// import "./ImageLinkForm.css";
 
-const FaceRecognition = () => {
-  return <div></div>;
+const FaceRecognition = ({imageURL}) => {
+  return (
+    <div className="center">
+      <img
+        src={imageURL}
+        alt="facial recognition"
+      />
+    </div>
+  );
 };
 
 export default FaceRecognition;
