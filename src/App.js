@@ -2,6 +2,7 @@ import { Component } from "react";
 import Navigation from "./Components/Navigation/Navigation";
 import Logo from "./Components/Logo/Logo";
 import ImageLinkForm from "./Components/ImageLinkForm/ImageLinkForm";
+import FaceRecognition from "./Components/FaceRecognition/FaceRecognition";
 import "./App.css";
 
 class App extends Component {
