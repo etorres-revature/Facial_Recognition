@@ -1,4 +1,5 @@
 import { Component } from "react";
+import SignIn from "./Components/SignIn/SignIn";
 import Clarifai from "clarifai";
 import Particles from "react-particles-js";
 import Navigation from "./Components/Navigation/Navigation";
@@ -31,6 +32,7 @@ class App extends Component {
       input: "",
       imageURL: "",
       box: {},
+      route: "signin",
     };
   }
 
@@ -64,21 +66,32 @@ class App extends Component {
       .catch((err) => console.log("Whoops!! This happened...", err));
   };
 
+  onRouteChange = (route) => {
+    this.setState({ route: route });
+  };
+
   render() {
     return (
       <div className="App">
         <Particles className="particles" params={{ particlesOptions }} />
-        <Navigation />
-        <Logo />
-        <Rank />
-        <ImageLinkForm
-          onInputChange={this.onInputChange}
-          onButtonSubmit={this.onButtonSubmit}
-        />
-        <FaceRecognition
-          box={this.state.box}
-          imageURL={this.state.imageURL}
-        />
+        <Navigation onRouteChange={this.onRouteChange} />
+        {this.state.route === "signin" ? (
+          <SignIn onRouteChange={this.onRouteChange} />
+        ) : (
+          <div>
+            {" "}
+            <Logo />
+            <Rank />
+            <ImageLinkForm
+              onInputChange={this.onInputChange}
+              onButtonSubmit={this.onButtonSubmit}
+            />
+            <FaceRecognition
+              box={this.state.box}
+              imageURL={this.state.imageURL}
+            />
+          </div>
+        )}
       </div>
     );
   }
